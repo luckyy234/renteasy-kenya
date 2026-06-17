@@ -68,15 +68,15 @@ async function publishRoom() {
 
   const { data, error } = await supabase
     .from("rooms")
-    .insert([
-      {
-        title,
-        location,
-        rent,
-        description,
-        whatsapp
-      }
-    ]);
+     .insert([{
+  title,
+  location,
+  rent,
+  description,
+  whatsapp,
+  image: imageUrl,
+  user_id: user.id
+}]);
 
   if (error) {
     alert("Error posting room: " + error.message);
