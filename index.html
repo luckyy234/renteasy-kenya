@@ -39,6 +39,11 @@ border-radius:5px;
 <h1>🏠 Available Rooms</h1>
 
 <div id="listings"></div>
+<h1><input id="search" type="text" placeholder="Search location or title">
+
+<input id="maxRent" type="number" placeholder="Max rent (e.g. 10000)">
+
+<button onclick="loadRooms()">Search</button></h1>
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
