@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+  font-family: Arial;
+  padding:20px;
+}
+
+#messages{
+  height:400px;
+  overflow-y:auto;
+  border:1px solid #ddd;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+input{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  background:#2563EB;
+  color:white;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Chat</h2>
+
+<div id="messages"></div>
+
+<input id="msg" placeholder="Type message">
+
+<button onclick="sendMessage()">Send</button>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseUrl = "https://onwgfczqjuiasuqnopeh.supabase.co";
+const supabaseKey = "YOUR_ANON_KEY";
+
+const client = supabase.createClient(
+  supabaseUrl,
+  supabaseKey
+);
+</script>
+</body>
+</html>
