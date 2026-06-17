@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>RentEasy Kenya</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+body{
+font-family:Arial;
+background:#f5f5f5;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:8px;
+box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+button{
+background:#2563EB;
+color:white;
+padding:10px;
+border:none;
+border-radius:5px;
+}
+</style>
+</head>
+
+<body>
+
+<div style="text-align:center;background:#222;padding:15px;">
+<a href="index.html" style="color:white;margin:10px;">Home</a>
+<a href="post-room.html" style="color:white;margin:10px;">Post Room</a>
+</div>
+
+<h1>🏠 Available Rooms</h1>
+
+<div id="listings"></div>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const supabaseUrl = "https://onwgfczqjuiasuqnopeh.supabase.co";
+const supabaseKey = "sb_publishable_3PbuC2qrGFLhykHnxJ8GfQ_J7rwARww";
+
+// FIXED: correct client name
+const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function loadRooms() {
+
+  const { data, error } = await client
+    .from("rooms")
+    .select("*")
+    .order("id", { ascending: false });
+
+  if (error) {
+    document.getElementById("listings").innerHTML =
+      "Error loading rooms: " + error.message;
+    return;
+  }
+
+  let html = "";
+
+  data.forEach(room => {
+    html += `
+      <div class="card">
+        <h3>${room.title}</h3>
+        <p>📍 ${room.location}</p>
+        <p>💰 KES ${room.rent}</p>
+        <p>${room.description}</p>
+        <a href="https://wa.me/${room.whatsapp}" target="_blank">
+          <button>Contact on WhatsApp</button>
+        </a>
+      </div>
+    `;
+  });
+
+  document.getElementById("listings").innerHTML = html;
+}
+
+loadRooms();
+</script>
+
+</body>
+</html>
