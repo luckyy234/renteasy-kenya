@@ -39,18 +39,52 @@ border-radius:5px;
 </div>
 
 <h1>🏠 Post Your Room</h1>
+<input id="title" type="text" placeholder="Room Title">
 
-<input type="text" placeholder="Room Title">
+<input id="location" type="text" placeholder="Location">
 
-<input type="text" placeholder="Location">
+<input id="rent" type="number" placeholder="Rent Amount">
 
-<input type="number" placeholder="Rent Amount">
+<textarea id="description" placeholder="Describe the room"></textarea>
 
-<textarea placeholder="Describe the room"></textarea>
+<input id="whatsapp" type="text" placeholder="WhatsApp Number">
 
-<input type="text" placeholder="WhatsApp Number">
+<button onclick="publishRoom()">Publish Listing</button>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<button>Publish Listing</button>
+<script>
+const supabaseUrl = "https://onwgfczqjuiasuqnopeh.supabase.co";
+const supabaseKey = "YOUR_ANON_KEY_HERE"; // replace this
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
+async function publishRoom() {
+  const title = document.getElementById("title").value;
+  const location = document.getElementById("location").value;
+  const rent = document.getElementById("rent").value;
+  const description = document.getElementById("description").value;
+  const whatsapp = document.getElementById("whatsapp").value;
+
+  const { data, error } = await supabase
+    .from("rooms")
+    .insert([
+      {
+        title,
+        location,
+        rent,
+        description,
+        whatsapp
+      }
+    ]);
+
+  if (error) {
+    alert("Error posting room: " + error.message);
+  } else {
+    alert("Room posted successfully!");
+    console.log(data);
+  }
+}
+</script>
 </body>
+
+
 </html>
