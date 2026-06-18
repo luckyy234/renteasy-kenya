@@ -27,6 +27,7 @@ border:none;
 border-radius:5px;
 }
 </style>
+
 </head>
 
 <body>
@@ -43,71 +44,7 @@ border-radius:5px;
 
 <input id="maxRent" type="number" placeholder="Max rent (e.g. 10000)">
 
-<button onclick="<script>
-const supabaseUrl = "https://onwgfczqjuiasuqnopeh.supabase.co";
-const supabaseKey = "sb_publishable_3PbuC2qrGFLhykHnxJ8GfQ_J7rwARww";
-const client = supabase.createClient(supabaseUrl, supabaseKey);
-
-async function loadRooms() {
-
-  const search = document.getElementById("search").value.toLowerCase();
-  const maxRent = document.getElementById("maxRent").value;
-
-  let query = client
-    .from("rooms")
-    .select("*")
-    .order("id", { ascending: false });
-
-  const { data, error } = await query;
-
-  if (error) {
-    document.getElementById("listings").innerHTML =
-      "Error: " + error.message;
-    return;
-  }
-
-  // FILTER IN FRONTEND
-  let filtered = data;
-
-  if (search) {
-    filtered = filtered.filter(room =>
-      room.title.toLowerCase().includes(search) ||
-      room.location.toLowerCase().includes(search)
-    );
-  }
-
-  if (maxRent) {
-    filtered = filtered.filter(room =>
-      Number(room.rent) <= Number(maxRent)
-    );
-  }
-
-  let html = "";
-
-  if (filtered.length === 0) {
-    html = "<p>No rooms found.</p>";
-  } else {
-    filtered.forEach(room => {
-      html += `
-        <div class="card">
-          <h3>${room.title}</h3>
-          <p>📍 ${room.location}</p>
-          <p>💰 KES ${room.rent}</p>
-          <p>${room.description}</p>
-          <a href="https://wa.me/${room.whatsapp}" target="_blank">
-            <button>Contact on WhatsApp</button>
-          </a>
-        </div>
-      `;
-    });
-  }
-
-  document.getElementById("listings").innerHTML = html;
-}
-
-// auto load on page start
-loadRooms();
-</script>()">Search</button></h1>
+<button onclick="loadRooms()">Search</button>
 
 <!-- Supabase -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -158,6 +95,56 @@ async function loadRooms() {
 }
 
 loadRooms();
+
+<script>
+const supabaseUrl = "https://onwgfczqjuiasuqnopeh.supabase.co";
+const supabaseKey = "YOUR_KEY";
+const client = supabase.createClient(supabaseUrl, supabaseKey);
+
+async function loadRooms() {
+  const search = document.getElementById("search").value.toLowerCase();
+  const maxRent = document.getElementById("maxRent").value;
+
+  let query = client
+    .from("rooms")
+    .select("*")
+    .order("id", { ascending: false });
+
+  const { data, error } = await query;
+
+  let html = "";
+
+  if (error) {
+    document.getElementById("listings").innerHTML = "Error: " + error.message;
+    return;
+  }
+
+  let filtered = data.filter(room =>
+    room.title.toLowerCase().includes(search) ||
+    room.location.toLowerCase().includes(search)
+  );
+
+  if (maxRent) {
+    filtered = filtered.filter(room => Number(room.rent) <= Number(maxRent));
+  }
+
+  if (filtered.length === 0) {
+    html = "No rooms found.";
+  } else {
+    filtered.forEach(room => {
+      html += `
+        <div>
+          <h3>${room.title}</h3>
+          <p>${room.location}</p>
+          <p>KES ${room.rent}</p>
+        </div>
+      `;
+    });
+  }
+
+  document.getElementById("listings").innerHTML = html;
+}
+</script>
 </script>
 
 </body>
