@@ -1,29 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Available Rooms</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RentEasy Kenya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <!-- Supabase (ONLY ONCE) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
+      font-family: Arial;
       background: #f5f5f5;
+      padding: 20px;
     }
 
-    nav {
-      background: #222;
-      padding: 10px;
+    .nav {
       text-align: center;
+      background: #222;
+      padding: 15px;
     }
 
-    nav a {
+    .nav a {
       color: white;
-      margin: 0 10px;
+      margin: 10px;
       text-decoration: none;
       font-weight: bold;
     }
@@ -35,58 +34,66 @@
     input {
       width: 100%;
       padding: 10px;
-      margin: 10px 0;
+      margin: 8px 0;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
 
     button {
       width: 100%;
-      padding: 12px;
-      background: #2d6cdf;
+      background: #2563EB;
       color: white;
+      padding: 12px;
       border: none;
       border-radius: 5px;
       font-size: 16px;
     }
 
-    .room-card {
+    .card {
       background: white;
       padding: 15px;
-      margin-top: 15px;
+      margin: 15px 0;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
 
-    .room-card a {
+    .whatsapp-btn {
       display: inline-block;
       margin-top: 10px;
       background: green;
       color: white;
-      padding: 8px 12px;
+      padding: 10px;
       border-radius: 5px;
       text-decoration: none;
+    }
+
+    iframe {
+      margin-top: 10px;
+      border-radius: 8px;
     }
   </style>
 </head>
 
 <body>
 
-  <nav>
+  <!-- NAV -->
+  <div class="nav">
     <a href="index.html">Home</a>
-    <a href="postroom.html">Post Room</a>
-  </nav>
+    <a href="post-room.html">Post Room</a>
+  </div>
 
+  <!-- TITLE -->
   <h1>🏠 Available Rooms</h1>
 
+  <!-- SEARCH -->
   <input id="search" type="text" placeholder="Search location or title">
   <input id="maxRent" type="number" placeholder="Max rent (e.g. 10000)">
-
   <button onclick="loadRooms()">Search</button>
 
+  <!-- LISTINGS -->
   <div id="listings"></div>
 
-  <!-- SCRIPT (VERY IMPORTANT: KEEP THIS AT BOTTOM) -->
+  <!-- SCRIPT (ONLY ONE BLOCK) -->
   <script>
     const supabaseUrl = "https://onwgfczqjuiasuqnopeh.supabase.co";
     const supabaseKey = "sb_publishable_3PbuC2qrGFLhykHnxJ8GfQ_J7rwARww";
@@ -102,7 +109,8 @@
         .order("id", { ascending: false });
 
       if (error) {
-        document.getElementById("listings").innerHTML = "Error: " + error.message;
+        document.getElementById("listings").innerHTML =
+          "Error loading rooms: " + error.message;
         return;
       }
 
@@ -124,13 +132,23 @@
       } else {
         filtered.forEach(room => {
           html += `
-            <div class="room-card">
+            <div class="card">
               <h3>${room.title}</h3>
-              <p><strong>Location:</strong> ${room.location}</p>
-              <p><strong>Rent:</strong> KES ${room.rent}</p>
+              <p>📍 ${room.location}</p>
+              <p>💰 KES ${room.rent}</p>
               <p>${room.description || ""}</p>
-              <a href="https://wa.me/${room.whatsapp}" target="_blank">
-                Contact on WhatsApp
+
+              <iframe
+                width="100%"
+                height="200"
+                loading="lazy"
+                src="https://www.google.com/maps?q=${encodeURIComponent(room.location)}&output=embed">
+              </iframe>
+
+              <a class="whatsapp-btn"
+                 href="https://wa.me/${room.whatsapp}?text=Hi%20I%20am%20interested%20in%20your%20room%20(${room.title})"
+                 target="_blank">
+                 Contact on WhatsApp
               </a>
             </div>
           `;
@@ -140,7 +158,7 @@
       document.getElementById("listings").innerHTML = html;
     }
 
-    // Auto load on page open
+    // AUTO LOAD
     loadRooms();
   </script>
 
